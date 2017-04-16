@@ -13,14 +13,14 @@ FloatingActionButton改变background颜色用`app:backgroundTint:”@color/.....
     app:fabSize="normal" >
 ~~~
 
-设置<LinearLayout>标签的 android:showDividers属性可以显示分隔线。
-如果有多个LinearLayout，显示效果和在 LinearLayout之间加分隔线是一样的。
-android:showDividers属性可以设置如下4个值：
-none：不显示分隔线；
-beginning：在LinearLayout的开始处显示分隔线；
-end：在Linearlayout的结尾处显示分隔线；
-middle：在LinearLayout中的每两个组件间显示分隔线。
-除了需要设置android:showDividers属性外，还要设置android:divider属性，该属性表示分隔线的图像。
+设置<LinearLayout>标签的 android:showDividers属性可以显示分隔线。  
+如果有多个LinearLayout，显示效果和在 LinearLayout之间加分隔线是一样的。  
+android:showDividers属性可以设置如下4个值：  
+none：不显示分隔线；  
+beginning：在LinearLayout的开始处显示分隔线；  
+end：在Linearlayout的结尾处显示分隔线；  
+middle：在LinearLayout中的每两个组件间显示分隔线。  
+除了需要设置android:showDividers属性外，还要设置android:divider属性，该属性表示分隔线的图像。  
 
 # 2.AdapterView
 ~~~
@@ -56,39 +56,39 @@ Private String [] []arms = nnew String [] []{  {“s”,”a”,”d”},{ “id
 - APP被Kill
 
 
-这么做的目的是当屏幕方向发生改变的时候，fragment所依附的Activity并不会重新销毁再创建，让情况相对简单一点。
+这么做的目的是当屏幕方向发生改变的时候，fragment所依附的Activity并不会重新销毁再创建，让情况相对简单一点。  
 
 Fragment回到返回栈
-1.临时数据 对于临时数据，我们使用onSaveInstanceState方法进行保存，并且在onCreateView方法中恢复（请注意是onCreateView）。
+1.临时数据 对于临时数据，我们使用onSaveInstanceState方法进行保存，并且在onCreateView方法中恢复（请注意是onCreateView）。  
 
 
-2.永久数据 对于持久性数据，我们要在onPause方法中进行存储。
+2.永久数据 对于持久性数据，我们要在onPause方法中进行存储。  
 　
 对比这两张生命周期方法的图，能得出两个结论。
 ###  - 1.无论任务栈中fragment数量为多少，onSaveInstanceState方法都没有调用
 ###  - 2.当fragment任务栈中有多个fragment时，进入下一个fragment时，并不会销毁fragment实例，而是仅仅销毁视图，最终调用的方法为onDestoryView。
-　　所以此时我们要去保存临时数据，并不能仅保存在onSaveInstanceState中（因为它可能不会调用），还应该在onDestoryView方法中进行保存临时数据的操作，源码如下：
+　　所以此时我们要去保存临时数据，并不能仅保存在onSaveInstanceState中（因为它可能不会调用），还应该在onDestoryView方法中进行保存临时数据的操作，源码如下：  
 
-结束之前我们来一句话总结下本文：
-Fragment对临时数据的保存，仅仅依靠onSaveInstanceState方法是不行的，还需要在onDestoryView中进行相应操作，具体参考上面的代码。
-Fragment中对于一些持久性的数据，仍应在onPause中保存。
+结束之前我们来一句话总结下本文：  
+Fragment对临时数据的保存，仅仅依靠onSaveInstanceState方法是不行的，还需要在onDestoryView中进行相应操作，具体参考上面的代码。  
+Fragment中对于一些持久性的数据，仍应在onPause中保存。  
 
 # 7.Activity数据保存与恢复
 
-在我写的这个demo中，onSaveInstanceState的调用是处于onPause和onStop之间的，（下面关于Activity的生命周期方法，会讲解一些值得大家注意的），我查阅了一下资料，能保证的是onSaveInstanceState方法会在onStop之前调用，但是是否在onPause之前就不一定了。
+在我写的这个demo中，onSaveInstanceState的调用是处于onPause和onStop之间的，（下面关于Activity的生命周期方法，会讲解一些值得大家注意的），我查阅了一下资料，能保证的是onSaveInstanceState方法会在onStop之前调用，但是是否在onPause之前就不一定了。  
 
-结论： google工程师们对onSaveInstanceState如此设计就是让其完成对一些临时的、非永久数据存储并进行恢复。什么样的数据属于临时数据呢？举个例子，比如EditText中输入的内容，CheckBox是否勾选，ScrollView的滑动位置，目前视频的播放位置等等。
+结论： google工程师们对onSaveInstanceState如此设计就是让其完成对一些临时的、非永久数据存储并进行恢复。什么样的数据属于临时数据呢？举个例子，比如EditText中输入的内容，CheckBox是否勾选，ScrollView的滑动位置，目前视频的播放位置等等。  
 
-（TextView）其他View控件都有相似的实现原理（自动保存）。值得一提的是，只有当你给这个wiget在xml中指定id时，它才具有保存数据并且恢复的能力，并且不同的wiget还不能共用这个id，否则会出现数据覆盖的情况。
+（TextView）其他View控件都有相似的实现原理（自动保存）。值得一提的是，只有当你给这个wiget在xml中指定id时，它才具有保存数据并且恢复的能力，并且不同的wiget还不能共用这个id，否则会出现数据覆盖的情况。  
 
-onSaveInstanceState的使用姿势
-比如我们要保存当前视频的播放进度，这个显然控件没有帮我们实现onSaveInstanceState，所以就只能靠自己了，代码如下所示。
+onSaveInstanceState的使用姿势   
+比如我们要保存当前视频的播放进度，这个显然控件没有帮我们实现onSaveInstanceState，所以就只能靠自己了，代码如下所示。    
 
-保存临时数据
+保存临时数据  
 
-恢复临时数据
-当在onCreate取出临时数据时，记得加一个非空判断。
-看到这里，也许你认为本文该就此结束了，不过在回过头看看，我们刚才一直强调的是临时数据，毕竟onSaveInstanceState本身就是为临时数据服务的，但是一些永久性质的数据，比如插入数据库的操作，我们应该在什么方法中对其进行保存呢？
+恢复临时数据  
+当在onCreate取出临时数据时，记得加一个非空判断。  
+看到这里，也许你认为本文该就此结束了，不过在回过头看看，我们刚才一直强调的是临时数据，毕竟onSaveInstanceState本身就是为临时数据服务的，但是一些永久性质的数据，比如插入数据库的操作，我们应该在什么方法中对其进行保存呢？  
 
 # 8.三元操作“ ?  :  ;”的用法（i>0?i++:j=2）
 **判断正确的话执行i++，错误的话执行j=2**
